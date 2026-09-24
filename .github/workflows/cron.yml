@@ -2,12 +2,10 @@ name: Scheduled Task Cron
 
 on:
   schedule:
-    # Runs every day at 8:00 AM UTC
-    # You can change this using standard cron syntax (UTC time)
-    # - cron: '0 8 * * *'
+    # Runs every 1 minute
     - cron: '*/5 * * * *'
   
-  # Allows you to also trigger it manually from the GitHub Actions tab if needed
+  # Allows you to trigger it manually from the Actions tab
   workflow_dispatch:
 
 jobs:
@@ -19,24 +17,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Set up Python environment
+      # 2. Set up Python environment (cache removed to prevent requirements.txt errors)
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          cache: 'pip' # optional: caches dependencies if you have a requirements.txt
 
-      # 3. Install dependencies (if you have any)
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      # 3. Install dependencies (uncomment and add a requirements.txt if you install external packages later)
+      # - name: Install dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install -r requirements.txt
 
-      # 4. Run your script
+      # 4. Run your Python script (change 'task.py' if it's located inside a folder)
       - name: Run Python script
         run: python task.py
-        
-        # If your script requires environment variables (like API keys or DB URLs), 
-        # pass them securely using GitHub Secrets:
-        # env:
-        #   MY_SECRET_KEY: ${{ secrets.MY_SECRET_KEY }}
